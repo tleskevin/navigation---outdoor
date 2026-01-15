@@ -19,6 +19,13 @@
       "dependencies": {},
       "url": "https://packages.unity.com"
     },
+    "com.meta.xr.sdk.voice": {
+      "version": "83.0.1",
+      "depth": 0,
+      "source": "registry",
+      "dependencies": {},
+      "url": "https://packages.unity.com"
+    },
     "com.openai.unity": {
       "version": "8.8.7",
       "depth": 0,
