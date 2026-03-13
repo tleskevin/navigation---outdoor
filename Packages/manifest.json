@@ -1,11 +1,16 @@
 {
   "dependencies": {
     "com.meta.xr.mrutilitykit": "83.0.0",
+    "com.meta.xr.sdk.all": "85.0.0",
+    "com.nianticlabs.lightship": "file:C:/Users/TUF/Downloads/ardk-upm-3.17.0/package",
+    "com.openai.unity": "8.8.9",
+    "com.unity.ai.inference": "2.2.1",
     "com.unity.feature.development": "1.0.2",
     "com.unity.mobile.android-logcat": "1.4.6",
-    "com.unity.ai.inference": "2.2.1",
+    "com.unity.render-pipelines.universal": "17.0.4",
     "com.unity.ugui": "2.0.0",
-    "com.unity.xr.management": "4.5.3",
+    "com.unity.xr.management": "4.5.4",
+    "com.unity.xr.meta-openxr": "2.4.0",
     "com.unity.xr.openxr": "1.15.1",
     "com.unity.modules.ai": "1.0.0",
     "com.unity.modules.androidjni": "1.0.0",
@@ -38,5 +43,15 @@
     "com.unity.modules.vr": "1.0.0",
     "com.unity.modules.wind": "1.0.0",
     "com.unity.modules.xr": "1.0.0"
-  }
+  },
+  "scopedRegistries": [
+    {
+      "name": "OpenUPM",
+      "url": "https://package.openupm.com",
+      "scopes": [
+        "com.openai",
+        "com.utilities"
+      ]
+    }
+  ]
 }

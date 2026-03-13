@@ -77,7 +77,9 @@ namespace PassthroughCameraSamples.MultiObjectDetection
 
             // Run inference with an empty image to load the model in the memory. The first inference blocks the main thread for a long time, so we're doing it on the app launch
             Texture tempTexture = new Texture2D(2, 2, TextureFormat.RGBA32, false);
-            var textureTransform = new TextureTransform().SetDimensions(tempTexture.width, tempTexture.height, 3);
+
+            // var textureTransform = new TextureTransform().SetDimensions(tempTexture.width, tempTexture.height, 3);
+            var textureTransform = new TextureTransform();
             using var input = new Tensor<float>(new TensorShape(1, 3, inputShape.Get(2), inputShape.Get(3)));
             TextureConverter.ToTensor(tempTexture, input, textureTransform);
             worker.Schedule(input);
@@ -110,7 +112,9 @@ namespace PassthroughCameraSamples.MultiObjectDetection
             Texture targetTexture = m_cameraAccess.GetTexture();
 
             // Convert the texture to a Tensor and schedule the inference
-            var textureTransform = new TextureTransform().SetDimensions(targetTexture.width, targetTexture.height, 3);
+
+            // var textureTransform = new TextureTransform().SetDimensions(targetTexture.width, targetTexture.height, 3);
+            var textureTransform = new TextureTransform();
             using var input = new Tensor<float>(new TensorShape(1, 3, m_inputSize.x, m_inputSize.y));
             TextureConverter.ToTensor(targetTexture, input, textureTransform);
 

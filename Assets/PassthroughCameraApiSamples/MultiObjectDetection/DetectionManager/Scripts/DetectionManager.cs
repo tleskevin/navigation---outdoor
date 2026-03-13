@@ -14,8 +14,12 @@ namespace PassthroughCameraSamples.MultiObjectDetection
     {
         [SerializeField] private PassthroughCameraAccess m_cameraAccess;
 
+        //new voice
+        [SerializeField] private PassthroughBlindGuide m_blindGuide;
+        //
+
         [Header("Controls configuration")]
-        [SerializeField] private OVRInput.RawButton m_actionButton = OVRInput.RawButton.A;
+        [SerializeField] private OVRInput.RawButton m_actionButton = OVRInput.RawButton.RIndexTrigger;
 
         [Header("Placement configuration")]
         [SerializeField] private DetectionSpawnMarkerAnim m_spawnMarker;
@@ -30,6 +34,9 @@ namespace PassthroughCameraSamples.MultiObjectDetection
         internal OVRSpatialAnchor m_spatialAnchor;
         private bool m_isHeadsetTracking;
 
+        //
+        private float lastSpeakTime = 0f;
+        //
         private void Awake()
         {
             StartCoroutine(UpdateSpatialAnchor());
@@ -60,14 +67,14 @@ namespace PassthroughCameraSamples.MultiObjectDetection
             else
             {
                 // Press A button to spawn 3d markers
-                if (OVRInput.GetUp(m_actionButton))
+                if (OVRInput.GetDown(m_actionButton))
                 {
                     SpawnCurrentDetectedObjects();
                 }
             }
 
             // Press B button to clean all markers
-            if (OVRInput.GetDown(OVRInput.RawButton.B))
+            if (OVRInput.GetDown(OVRInput.RawButton.RHandTrigger))
             {
                 CleanMarkers();
             }
@@ -212,6 +219,11 @@ namespace PassthroughCameraSamples.MultiObjectDetection
         private void SpawnCurrentDetectedObjects()
         {
             var newCount = 0;
+
+            // new voice
+            string textToSpeak = "";
+            //
+
             foreach (SentisInferenceUiManager.BoundingBoxData box in m_uiInference.m_boxDrawn)
             {
                 if (!HasExistingMarkerInBoundingBox(box))
@@ -221,8 +233,39 @@ namespace PassthroughCameraSamples.MultiObjectDetection
 
                     m_spawnedEntities.Add(marker);
                     newCount++;
+
+                    // new voice
+
+                    if (string.IsNullOrEmpty(textToSpeak))
+                        textToSpeak = "發現" + box.ClassName;
+                    else
+                        textToSpeak += "、" + box.ClassName;
+                    //
                 }
+
+                // new voice
+                if (!string.IsNullOrEmpty(textToSpeak) && m_blindGuide != null)
+                {
+                    if (Time.time > lastSpeakTime + 2.0f)
+                    {
+                        lastSpeakTime = Time.time;
+                        m_blindGuide.Speak(textToSpeak);
+                    }
+                }
+                //
             }
+
+            //new voice
+            if (!string.IsNullOrEmpty(textToSpeak) && m_blindGuide != null)
+            {
+                // 加上這行，確保你在實機上能看到 DetectionManager 真的有動作
+                if (m_blindGuide.resultText != null)
+                    m_blindGuide.resultText.text = "觸發 YOLO 語音: " + textToSpeak;
+
+                m_blindGuide.Speak(textToSpeak);
+            }
+            //
+
             if (newCount > 0)
             {
                 // Play sound if a new marker is placed.

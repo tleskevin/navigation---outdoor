@@ -1,0 +1,38 @@
+#pragma kernel CSMain
+
+Texture2DArray<float> _EnvironmentDepthTexture;
+RWStructuredBuffer<float3> _PointCloudBuffer;
+
+float4x4 _InvProjectionMatrix;
+float4x4 _LocalToWorldMatrix;
+float _MaxDistance;
+
+[numthreads(8, 8, 1)]
+void CSMain(uint3 id : SV_DispatchThreadID)
+{
+  
+    float depth = _EnvironmentDepthTexture[uint3(id.xy, 0)].r;
+    uint index = id.y * 320 + id.x;
+
+    if (depth <= 0.01f || depth > _MaxDistance)
+    {
+        _PointCloudBuffer[index] = float3(0, 0, 0);
+        return;
+    }
+
+    
+    float2 uv = (float2) id.xy / 320.0f;
+    float2 ndc = uv * 2.0f - 1.0f;
+
+   
+    float4 clipPos = float4(ndc.x, -ndc.y, 1.0f, 1.0f); 
+    float4 viewPos = mul(_InvProjectionMatrix, clipPos);
+    
+
+    float3 rayDir = normalize(viewPos.xyz / viewPos.w);
+    
+   
+    float3 worldPos = mul(_LocalToWorldMatrix, float4(rayDir * depth, 1.0f)).xyz;
+
+    _PointCloudBuffer[index] = worldPos;
+}
