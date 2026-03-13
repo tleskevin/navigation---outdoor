@@ -1,105 +1,59 @@
-# Unity-PassthroughCameraAPISamples
+# 🕶️ Smart Navigation Glasses (智慧導航眼鏡)
 
-## Project Overview
+這是一款基於 Unity 開發的虛擬實境/混合實境 (VR/MR) 導航系統。使用者可以透過語音輸入目的地，系統將自動分析語意、搜尋地點，並提供即時的步行導航資訊與語音進度報告。
 
-The **Unity-PassthroughCameraAPISamples** project helps Unity developers access Quest camera data using the **PassthroughCameraAccess** component from the Mixed Reality Utility Kit (MRUK). This component provides direct access to headset cameras with enhanced functionality including:
-- **Precise timestamps** for better camera-world alignment
-- **Simultaneous access to both cameras** (left and right)
-- **Complete camera metadata** including intrinsics, extrinsics, and pose information
+## 🌟 核心功能
 
-The project includes **five sample scenes** demonstrating various use cases:
+- **🎙️ 語音直覺操控**：按住手把按鍵即可說出目的地（整合 OpenAI Whisper）。
+- **🧠 語意目的地提取**：自動辨識語音中的地點關鍵字（整合 OpenAI GPT-4o-mini）。
+- **📍 精準導航系統**：
+  - 使用 **Google Roads API** 修正 GPS 座標至道路上（Snap to Road）。
+  - 使用 **Google Directions API** 規劃最佳步行路徑。
+  - 使用 **Google Places API** 搜尋鄰近目標。
+- **🔊 智慧語音導引**：
+  - 出發時自動播報預計時間與距離。
+  - 導航過程中每 15 秒自動報告剩餘進度。
+  - 抵達目的地時播放音效並語音提醒。
+- **📊 即時 UI 面板**：在視野中顯示經緯度、剩餘距離、目標名稱與系統同步狀態。
 
-| CameraToWorld | BrightnessEstimation | MultiObjectDectection | ShaderSample |
-|:-------------:|:--------------------:|:---------------------:|:------------:|
-| ![GIF 1](./Media/CameraToWorld.gif) | ![GIF 2](./Media/BrightnessEstimation.gif) | ![GIF 3](./Media/ObjectDetectionSentis.gif) | ![GIF 4](./Media/ShaderSample.gif) |
+## 🛠️ 技術棧
 
-## Documentation
+- **引擎**: Unity 2022.3+
+- **硬體支援**: Meta Quest 系列 (使用 OVRInput)
+- **API 整合**:
+  - OpenAI API (Whisper & GPT)
+  - Google Maps Platform (Directions, Roads, Places)
+- **UI 系統**: TextMeshPro
 
-For comprehensive guides, API reference, and tutorials, visit the official Meta Developers documentation:
+## 🚀 快速開始
 
-- **[Passthrough Camera API Overview](https://developers.meta.com/horizon/documentation/unity/unity-pca-overview)** - Introduction and key concepts
-- **[Getting Started Guide](https://developers.meta.com/horizon/documentation/unity/unity-pca-documentation)** - Setup, configuration, and usage instructions
-- **[Unity Sentis Integration](https://developers.meta.com/horizon/documentation/unity/unity-pca-sentis)** - Using ML/CV models with PCA
-- **[Migration Guide](https://developers.meta.com/horizon/documentation/unity/unity-pca-migration-from-webcamtexture)** - Migrating from WebCamTexture
+### 1. 環境設定
+確保您的 Unity 專案已安裝以下 Package：
+- `Oculus Integration` (Meta Interaction SDK)
+- `TextMeshPro`
 
-## Requirements
+### 2. API 金鑰配置
+在場景中找到 `MapDataLoader` 與 `VoiceNavigationHandler` 物件，並在 Inspector 視窗填入您的金鑰：
+- **Google API Key**: 需開啟 Directions, Roads, Places 權限。
+- **OpenAI API Key**: 用於語音轉文字與語意分析。
 
-- **Unity:** 6000.0.38f1 or newer
-- **Packages:**
-  - [Meta MRUK](https://assetstore.unity.com/packages/tools/integration/meta-mr-utility-kit-272450) (v81 or higher)
-  - [Unity Sentis](https://unity.com/sentis) (v2.1.3 for MultiObjectDetection sample)
-- **Hardware:** Quest 3 / Quest 3S with Horizon OS v74 or higher
-- **Permissions:** `horizonos.permission.HEADSET_CAMERA`
-- **Passthrough:** Must be enabled in your project
+### 3. 操作方式
+1. **啟動**：戴上頭盔並執行場景。
+2. **語音指令**：
+   - 按住 **右側手把 A 鍵 (Button.One)**。
+   - 說出：「我要去台北車站」或「帶我去最近的便利商店」。
+   - 放開按鍵，系統開始規劃。
+3. **導航**：跟著 UI 上的距離提示前進，系統會自動更新路徑。
 
-> [!NOTE]
-> You must use a physical headset to preview the passthrough camera. XR Simulator and Meta Horizon Link do not currently support passthrough cameras.
+## 📂 程式碼結構
 
-## Download the Project
+- `MapDataLoader.cs`: 負責處理導航邏輯、路徑計算與 UI 更新。
+- `VoiceNavigationHandler.cs`: 處理麥克風錄音、串接 OpenAI 服務以及搜尋地點。
 
-First, ensure you have Git LFS installed by running this command:
+---
 
-```bash
-git lfs install
-```
+## ⚠️ 注意事項
 
-Then, clone this repo using the "Code" button above, or this command:
-
-```bash
-git clone https://github.com/oculus-samples/Unity-PassthroughCameraApiSamples
-```
-
-## Project Content
-
-The project contains **five sample scenes** that demonstrate how to use the **PassthroughCameraAccess** component to access Quest camera data. All sample code and resources are located in the [**`PassthroughCameraApiSamples`**](./Assets/PassthroughCameraApiSamples/) folder:
-
-### Samples
-
-* **[`CameraViewer`](./Assets/PassthroughCameraApiSamples/CameraViewer)** - Displays a 2D canvas with camera feed
-* **[`CameraToWorld`](./Assets/PassthroughCameraApiSamples/CameraToWorld)** - Aligns RGB camera pose with Passthrough and transforms 2D coordinates to 3D world space rays
-* **[`BrightnessEstimation`](./Assets/PassthroughCameraApiSamples/BrightnessEstimation)** - Adapts the experience based on environment brightness
-* **[`MultiObjectDetection`](./Assets/PassthroughCameraApiSamples/MultiObjectDetection)** - Uses Unity Sentis for real-world object recognition
-* **[`ShaderSample`](./Assets/PassthroughCameraApiSamples/ShaderSample)** - Applies custom GPU effects to camera texture
-
-### Additional Components
-
-* **[`PassthroughCamera`](./Assets/PassthroughCameraApiSamples/PassthroughCamera)** - C# classes and utilities for camera access
-* **[`StartScene`](./Assets/PassthroughCameraApiSamples/StartScene)** - Menu scene for switching between samples
-
-## Getting Started
-
-1. Clone the GitHub project as described [above](#download-the-project)
-2. Open the project with **Unity 6000.0.38f1** or newer
-3. Open a sample scene from the **[`PassthroughCameraApiSamples`](./Assets/PassthroughCameraApiSamples/)** folder
-4. Use **Meta > Tools > Project Setup Tool** to fix any configuration issues
-5. Build and deploy to your Quest 3/3S device
-
-For detailed setup instructions, API reference, and usage examples, see the **[Getting Started Guide](https://developers.meta.com/horizon/documentation/unity/unity-pca-documentation)**.
-
-## Learn More
-
-For comprehensive information about using the Passthrough Camera API:
-
-- **Setup & Configuration** - [Getting Started Guide](https://developers.meta.com/horizon/documentation/unity/unity-pca-documentation)
-- **Unity Sentis Integration** - [ML/CV with PCA](https://developers.meta.com/horizon/documentation/unity/unity-pca-sentis)
-- **Troubleshooting** - See the troubleshooting section in the [Getting Started Guide](https://developers.meta.com/horizon/documentation/unity/unity-pca-documentation#troubleshooting)
-
-## Report an Issue
-
-If you encounter any issues, please report them with:
-
-- **Unity Engine version**
-- **XR plugin** (Oculus XR or Open XR) and version number
-- **Quest device** model and **Horizon OS version**
-- **Logcat logs** (use `adb logcat >> log.txt`)
-- **Video or screenshot** of the issue
-- **Relevant information** about your use case
-
-## License
-
-The [`Oculus License`](./LICENSE.txt) applies to the SDK and supporting material. The [`MIT License`](./Assets/PassthroughCameraApiSamples/LICENSE.txt) applies to only certain, clearly marked documents. If an individual file does not indicate which license it is subject to, then the Oculus License applies.
-
-However,
-* Files from [`Assets/PassthroughCameraApiSamples/MultiObjectDetection/SentisInference/Model`](./Assets/PassthroughCameraApiSamples/MultiObjectDetection/SentisInference/Model) are licensed under [`MIT`](https://github.com/MultimediaTechLab/YOLO/blob/main/LICENSE).
-
-See the [`CONTRIBUTING`](./CONTRIBUTING.md) file for how to help out.
+- **API 費用**：本專案使用多項付費 API，請監控您的使用量。
+- **安全性**：請勿將包含真實 API Key 的 `README.md` 或腳本上傳至公開倉庫。
+- **權限**：在 Android (Quest) 平台上執行時，請確保已開啟麥克風權限。
