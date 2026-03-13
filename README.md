@@ -1,4 +1,4 @@
-# 🕶️ Smart Navigation Glasses (智慧導航眼鏡)
+# 🕶️ Smart Navigation Glasses (瞳行者)
 
 這是一款基於 Unity 開發的虛擬實境/混合實境 (VR/MR) 導航系統。使用者可以透過語音輸入目的地，系統將自動分析語意、搜尋地點，並提供即時的步行導航資訊與語音進度報告。
 
